@@ -38,5 +38,12 @@ Angular root module：SimplCommerce.Module.Core->wwwroot->admin-app.js
     本地化是做到数据库中。
 二: 视图所用Razor特性
     1 tag helper 对html做了扩展
+	
+添加Module：
+1 按其他module添加folder
+2 修改新module .csproj follow其他module
+3 在新module下添加module.json文件，按照其他module修改
+4 SimplCommerce.WebHost 引用新加项目
+5 SimplCommerce.WebHost 下的module.json 添加新module
 
 
