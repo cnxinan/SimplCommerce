@@ -1,3 +1,4 @@
+文档：https://docs.simplcommerce.com/en/latest/
 目标：学习理解框架运作原理，可以对框架进行功能扩展，最终要迁移村游网到该框架上。
 改进点整理：
     1 后台所用框架链接全部为点击跳转，适当加一些弹窗等。
@@ -15,6 +16,12 @@ vs2017 + sql server 2014
 startup：留着后面再看
 依赖注入没有使用Autofac，而是在每个modules的 ModuleInitializer.cs里利用自带组件处理。
 视图布局：https://www.cnblogs.com/dotNETCoreSG/p/aspnetcore-4_3_3-layout.html
+
+数据实体注入：
+	Setup.cs->services.AddCustomizedDataStore(_configuration);->ServiceCollectionExtensions.AddCustomizedDataStore->SimplDbContext.OnModelCreating->各个Modul的Data->
+	*ModelBuilder
+	
+	
 
 后台实现：
 入口:SimplCommerce.Module.Core.HomeAdmin->index.cshtml
