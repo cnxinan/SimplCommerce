@@ -1,0 +1,54 @@
+文档：https://docs.simplcommerce.com/en/latest/
+目标：学习理解框架运作原理，可以对框架进行功能扩展，最终要迁移村游网到该框架上。
+改进点整理：
+    1 后台所用框架链接全部为点击跳转，适当加一些弹窗等。
+    2 多语言功能不完善，没办法通过界面添加修改。
+
+开发环境建立：
+vs2017 + sql server 2014
+步骤：
+    1 修改appsettings.json的DefaultConnection
+    2 build解决方案
+    3 打开Tool-Nuget Package Manager-Package Manager Console,输入Update-Database，用来创建数据库
+    4 管理员账号密码：admin@simplcommerce.com, 1qazZAQ!
+
+整体框架解析：
+startup：留着后面再看
+依赖注入没有使用Autofac，而是在每个modules的 ModuleInitializer.cs里利用自带组件处理。
+视图布局：https://www.cnblogs.com/dotNETCoreSG/p/aspnetcore-4_3_3-layout.html
+
+数据实体注入：
+	Setup.cs->services.AddCustomizedDataStore(_configuration);->ServiceCollectionExtensions.AddCustomizedDataStore->SimplDbContext.OnModelCreating->各个Modul的Data->
+	*ModelBuilder
+	
+	
+
+后台实现：
+入口:SimplCommerce.Module.Core.HomeAdmin->index.cshtml
+Angular root module：SimplCommerce.Module.Core->wwwroot->admin-app.js
+
+
+功能模块解析：
+一：国际化(多语言)
+    asp.net core实现国际化(https://docs.microsoft.com/en-us/aspnet/core/fundamentals/localization?view=aspnetcore-2.1)
+    深入解析：https://www.cnblogs.com/lwqlun/p/9764243.html
+    Startup.cs services.AddCustomizedLocalization();
+    视图直接做多语言是通过扩展视图引擎 ModuleViewLocationExpander.cs 来实现每个module都可以有自己的一套公共模板，在_ViewImports.cshtml中注入 
+    @inject IViewLocalizer Localizer 来使用。
+    本地化是做到数据库中。
+二: 视图所用Razor特性
+    1 tag helper 对html做了扩展
+	
+添加Module：
+1 按其他module添加folder
+2 修改新module .csproj follow其他module
+3 在新module下添加module.json文件，按照其他module修改
+4 SimplCommerce.WebHost 引用新加项目
+5 SimplCommerce.WebHost 下的module.json 添加新module
+
+postman 测试接口:
+1 获取token的 post 接口要用body raw-> json 发送json 格式的参数
+
+
+
+
