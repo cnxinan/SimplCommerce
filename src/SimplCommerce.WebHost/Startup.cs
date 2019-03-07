@@ -1,13 +1,19 @@
-﻿using MediatR;
+﻿using System.Text.Encodings.Web;
+using System.Text.Unicode;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.WebEncoders;
+using Swashbuckle.AspNetCore.Swagger;
 using SimplCommerce.Infrastructure;
 using SimplCommerce.Infrastructure.Data;
+using SimplCommerce.Infrastructure.Modules;
 using SimplCommerce.Infrastructure.Web;
 using SimplCommerce.Module.Core.Data;
 using SimplCommerce.Module.Localization.Extensions;
@@ -31,7 +37,7 @@ namespace SimplCommerce.WebHost
         {
             GlobalConfiguration.WebRootPath = _hostingEnvironment.WebRootPath;
             GlobalConfiguration.ContentRootPath = _hostingEnvironment.ContentRootPath;
-            services.LoadInstalledModules(_hostingEnvironment.ContentRootPath);
+            services.AddModules(_hostingEnvironment.ContentRootPath);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -45,16 +51,20 @@ namespace SimplCommerce.WebHost
             services.AddHttpClient();
             services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             services.AddTransient(typeof(IRepositoryWithTypedId<,>), typeof(RepositoryWithTypedId<,>));
-            services.AddMediatR();
-            services.AddScoped<IMediator, SequentialMediator>();
 
             services.AddCustomizedLocalization();
 
             services.AddCustomizedMvc(GlobalConfiguration.Modules);
             services.Configure<RazorViewEngineOptions>(
-                options => { options.ViewLocationExpanders.Add(new ModuleViewLocationExpander()); });
+                options => { options.ViewLocationExpanders.Add(new ThemeableViewLocationExpander()); });
+            services.Configure<WebEncoderOptions>(options =>
+            {
+                options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
+            });
             services.AddScoped<ITagHelperComponent, LanguageDirectionTagHelperComponent>();
             services.AddTransient<IRazorViewRenderer, RazorViewRenderer>();
+            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-Token");
+            services.AddSingleton<AutoValidateAntiforgeryTokenAuthorizationFilter, CookieOnlyAutoValidateAntiforgeryTokenAuthorizationFilter>();
             services.AddCloudscribePagination();
 
             var sp = services.BuildServiceProvider();
@@ -63,6 +73,14 @@ namespace SimplCommerce.WebHost
             {
                 moduleInitializer.ConfigureServices(services);
             }
+
+            services.AddScoped<ServiceFactory>(p => p.GetService);
+            services.AddScoped<IMediator, Mediator>();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "SimplCommerce API", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -78,6 +96,7 @@ namespace SimplCommerce.WebHost
                     context => !context.Request.Path.StartsWithSegments("/api"),
                     a => a.UseExceptionHandler("/Home/Error")
                 );
+                app.UseHsts();
             }
 
             app.UseWhen(
@@ -85,7 +104,14 @@ namespace SimplCommerce.WebHost
                 a => a.UseStatusCodePagesWithReExecute("/Home/ErrorWithCode/{0}")
             );
 
+            app.UseHttpsRedirection();
             app.UseCustomizedStaticFiles(env);
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SimplCommerce API V1");
+            });
+
             app.UseCookiePolicy();
             app.UseCustomizedIdentity();
             app.UseCustomizedRequestLocalization();

@@ -48,6 +48,10 @@
     "version": "1.0.0"
   },
   {
+    "id": "SimplCommerce.Module.PaymentBraintree",
+    "version": "1.0.0"
+  },
+  {
     "id": "SimplCommerce.Module.PaymentCoD",
     "version": "1.0.0"
   },
@@ -61,6 +65,10 @@
   },
   {
     "id": "SimplCommerce.Module.PaymentStripe",
+    "version": "1.0.0"
+  },
+  {
+    "id": "SimplCommerce.Module.PaymentMomo",
     "version": "1.0.0"
   },
   {
@@ -129,6 +137,6 @@
   },
   {
     "id": "SimplCommerce.Module.ProjectZeroApi",
-    "version":  "1.0.0"
+    "version": "1.0.0"
   }
 ]

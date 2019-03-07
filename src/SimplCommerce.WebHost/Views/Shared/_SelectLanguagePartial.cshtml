@@ -7,7 +7,7 @@
 
 @{
     var uiCulture = Context.Features.Get<IRequestCultureFeature>().RequestCulture.UICulture.Name;
-    var selectedCulture = WorkContext.GetCurrentUser().Result.Culture;
+    var selectedCulture = (await WorkContext.GetCurrentUser()).Culture;
 }
 
 @if (GlobalConfiguration.Cultures.Count() > 1)
@@ -30,7 +30,7 @@
             </li>
         }
     </ul>
-    <form asp-controller="Localization" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post" id="lang-form" role="form">
+    <form asp-area="Localization" asp-controller="Localization" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post" id="lang-form" role="form">
         <input type="hidden" name="culture" value="@uiCulture" />
     </form>
 </li>

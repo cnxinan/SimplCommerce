@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,14 @@ namespace SimplCommerce.WebHost
     {
         public static void Main(string[] args)
         {
-            BuildWebHost2(args).Run();
+            try
+            {
+                BuildWebHost2(args).Run();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         // Changed to BuildWebHost2 to make EF don't pickup during design time
@@ -25,11 +33,6 @@ namespace SimplCommerce.WebHost
         private static void SetupConfiguration(WebHostBuilderContext hostingContext, IConfigurationBuilder configBuilder)
         {
             var env = hostingContext.HostingEnvironment;
-            configBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
-
-            configBuilder.AddEnvironmentVariables();
-
             var configuration = configBuilder.Build();
             configBuilder.AddEntityFrameworkConfig(options =>
                     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
