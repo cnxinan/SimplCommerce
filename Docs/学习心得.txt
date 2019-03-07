@@ -46,4 +46,9 @@ Angular root module：SimplCommerce.Module.Core->wwwroot->admin-app.js
 4 SimplCommerce.WebHost 引用新加项目
 5 SimplCommerce.WebHost 下的module.json 添加新module
 
+postman 测试接口:
+1 获取token的 post 接口要用body raw-> json 发送json 格式的参数
+
+
+
 
