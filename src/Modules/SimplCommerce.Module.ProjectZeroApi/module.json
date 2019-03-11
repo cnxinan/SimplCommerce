@@ -1,6 +1,6 @@
 {
   "id": "SimplCommerce.Module.ProjectZeroApi",
-  "name": "Project Zero Api",
+  "name": "ProjectZero Api",
   "isBundledWithHost": true,
   "version": "1.0.0"
 }
