@@ -49,6 +49,7 @@ Angular root module：SimplCommerce.Module.Core->wwwroot->admin-app.js
 postman 测试接口:
 1 获取token的 post 接口要用body raw-> json 发送json 格式的参数
 
-
+Linux部署：https://www.cnblogs.com/danvic712/p/9975402.html
+Docker部署：https://www.cnblogs.com/danvic712/p/10566750.html
 
 
