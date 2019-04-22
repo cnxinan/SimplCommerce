@@ -12,6 +12,15 @@ vs2017 + sql server 2014
     3 打开Tool-Nuget Package Manager-Package Manager Console,输入Update-Database，用来创建数据库
     4 管理员账号密码：admin@simplcommerce.com, 1qazZAQ!
 
+vs2017 + MariaDB
+步骤:
+	1 修改appsettings.json的DefaultConnection，MariaDB新建个空同名数据库。
+	2 nuget引入EfCore mysql provider和Hangfire mysql stroage
+	3 修改SimplCommerce.WebHost.Program.SetupConfiguration 和 SimplCommerce.WebHost.Extensions.ServiceCollectionExtensions.AddCustomizedDataStore 的provider 
+	4 删除SimplCommerce.WebHost.Migrations 下的所有文件
+	5 Package Manager Console, 输入 Add-Migration [migration name] 生成新的migration文件
+	6 Package Manager Console, 输入 update-database 迁移数据。
+	
 整体框架解析：
 startup：留着后面再看
 依赖注入没有使用Autofac，而是在每个modules的 ModuleInitializer.cs里利用自带组件处理。
