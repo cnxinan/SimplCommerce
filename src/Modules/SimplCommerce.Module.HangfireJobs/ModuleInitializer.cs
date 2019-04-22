@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Hangfire.MySql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,8 @@ namespace SimplCommerce.Module.HangfireJobs
 
             services.AddHangfireService(config =>
             {
-                config.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
+                //config.UseSqlServerStorage(configuration.GetConnectionString("DefaultConnection"));
+                config.UseStorage(new MySqlStorage(configuration.GetConnectionString("DefaultConnection"), new MySqlStorageOptions()));
             });
 
             //overwrite HangfireBaseOptions
