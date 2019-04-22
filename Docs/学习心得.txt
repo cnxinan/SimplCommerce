@@ -51,5 +51,6 @@ postman 测试接口:
 
 Linux部署：https://www.cnblogs.com/danvic712/p/9975402.html
 Docker部署：https://www.cnblogs.com/danvic712/p/10566750.html
+EntityFrame Migration: https://www.cnblogs.com/panchunting/p/entity-framework-code-first-migrations.html
 
 
