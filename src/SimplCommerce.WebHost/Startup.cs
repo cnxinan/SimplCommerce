@@ -19,6 +19,8 @@ using SimplCommerce.Module.Core.Data;
 using SimplCommerce.Module.Localization.Extensions;
 using SimplCommerce.Module.Localization.TagHelpers;
 using SimplCommerce.WebHost.Extensions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SimplCommerce.WebHost
 {
@@ -80,6 +82,19 @@ namespace SimplCommerce.WebHost
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "SimplCommerce API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "请输入OAuth接口返回的Token，前置Bearer。示例：Bearer {Roken}",
+                    Name = "Authorization",//jwt默认的参数名称
+                    In = "header",//jwt默认存放Authorization信息的位置(请求头中)
+                    Type = "apiKey"
+                });//Authorization的设置
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
+                {
+                    {
+                        "Bearer", Enumerable.Empty<string>()
+                    }
+                });
             });
         }
 
